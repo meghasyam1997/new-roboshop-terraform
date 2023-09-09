@@ -9,7 +9,7 @@ resource "aws_instance" "instances" {
 }
 
 resource "aws_route53_record" "recods" {
-  zone_id = Z06713411IASYL5XZHSG8
+  zone_id = "Z06713411IASYL5XZHSG8"
   name    = "${var.component_name}-${var.env}-msdevops72.online"
   type    = "A"
   ttl     = 30
