@@ -4,6 +4,7 @@ module "db_servers" {
   component_name = each.value["name"]
   instance_type = each.value["instance_type"]
   env = var.env
+  password = lookup(each.value,"password",null)
 }
 module "app_servers" {
   depends_on = [module.db_servers]
@@ -12,4 +13,5 @@ module "app_servers" {
   component_name = each.value["name"]
   instance_type = each.value["instance_type"]
   env = var.env
+  password = lookup(each.value,"password",null)
 }
