@@ -1,5 +1,5 @@
 module "db_servers" {
-  for_each = var.db_servers
+  for_each = var.db_server
   source = "./module"
   component_name = each.value["name"]
   instance_type = each.value["instance_type"]
@@ -7,7 +7,7 @@ module "db_servers" {
 }
 module "app_servers" {
   depends_on = [module.db_servers]
-  for_each = var.app_servers
+  for_each = var.app_server
   source = "./module"
   component_name = each.value["name"]
   instance_type = each.value["instance_type"]
