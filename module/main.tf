@@ -1,29 +1,24 @@
 resource "aws_instance" "instance" {
-  ami = data.aws_ami.ami.id
-  instance_type = var.instance_type
+  ami                    = data.aws_ami.ami.id
+  instance_type          = var.instance_type
   vpc_security_group_ids = [data.aws_security_group.allow_all.id]
 
   tags = {
-    Name ="${var.component_name}-${var.env}"
+    Name = local.name
   }
 }
 resource "null_resource" "provisioner" {
-  depends_on = [aws_instance.instance,aws_route53_record.record]
-  provisioner "remote-exec" {
+  depends_on = [aws_instance.instance, aws_route53_record.record]
 
+  provisioner "remote-exec" {
     connection {
-      type = "ssh"
-      user = "centos"
+      type     = "ssh"
+      user     = "centos"
       password = "DevOps321"
-      host = aws_instance.instance.private_ip
+      host     = aws_instance.instance.private_ip
     }
 
-    inline = [
-      "rm -rf roboshop-shell",
-      "git clone https://github.com/meghasyam1997/roboshop-shell.git",
-      "cd roboshop-shell",
-      "sudo bash ${var.component_name}.sh ${var.password}"
-    ]
+    inline = var.app_type == "db" ? local.db_command : local.app_command
   }
 
 }
