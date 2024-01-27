@@ -9,14 +9,18 @@ module "vpc" {
   env  = var.env
 }
 
-module "web" {
-  source = "git::https://github.com/meghasyam1997/new-tf-module-app.git"
+#module "web" {
+#  source = "git::https://github.com/meghasyam1997/new-tf-module-app.git"
+#
+#  for_each = var.app
+#  instance_type = each.value["instance_type"]
+#  name = each.value["name"]
+#  subnet_ids = element(lookup(lookup(lookup(lookup(module.vpc, "main" , null), "subnets" , null), each.value["subnet_name"],null), "subnet_ids", null), 0)
+#
+#  env = var.env
+#
+#}
 
-  for_each = var.app
-  instance_type = each.value["instance_type"]
-  name = each.value["name"]
-  subnet_ids = element(lookup(lookup(lookup(lookup(module.vpc, "main" , null), "subnets" , null), each.value["subnet_name"],null), "subnet_ids", null), 0)
-
-  env = var.env
-
+output "vpc" {
+  value = module.vpc
 }
