@@ -1,4 +1,5 @@
-env = "dev"
+env          = "dev"
+bastion_cidr = ["172.31.36.171/32"]
 
 vpc = {
   main = {
@@ -30,13 +31,21 @@ vpc = {
 
 app = {
   frontend = {
-    name = "frontend"
-    instance_type = "t3.small"
-    subnet_name = "web"
+    name             = "frontend"
+    instance_type    = "t3.small"
+    subnet_name      = "web"
+    allow_app_cidr   = "public"
+    desired_capacity = 2
+    max_size         = 10
+    min_size         = 2
   }
   catalogue = {
-    name = "catalogue"
-    instance_type = "t3.small"
-    subnet_name = "app"
+    name             = "catalogue"
+    instance_type    = "t3.small"
+    subnet_name      = "app"
+    allow_app_cidr   = "web"
+    desired_capacity = 2
+    max_size         = 10
+    min_size         = 2
   }
 }

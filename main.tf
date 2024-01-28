@@ -9,18 +9,22 @@ module "vpc" {
   env  = var.env
 }
 
-module "web" {
+module "apps" {
   source = "git::https://github.com/meghasyam1997/new-tf-module-app.git"
 
-  for_each      = var.app
-  instance_type = each.value["instance_type"]
-  name          = each.value["name"]
-  subnet_ids    = element(lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null), 0)
+  for_each         = var.app
+  instance_type    = each.value["instance_type"]
+  name             = each.value["name"]
+  desired_capacity = each.value["desired_capacity"]
+  max_size         = each.value["max_size"]
+  min_size         = each.value["min_size"]
 
-  env = var.env
+  bastion_cidr   = var.bastion_cidr
+  allow_app_cidr = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["allow_app_cidr"], null), "subnet_cidrs", null)
+  vpc_id         = lookup(lookup(module.vpc, "main", null ), "vpc_id", null)
+  subnet_ids     = lookup(lookup(lookup(lookup(module.vpc, "main", null), "subnets", null), each.value["subnet_name"], null), "subnet_ids", null)
 
-}
+  env  = var.env
+  tags = local.tags
 
-output "vpc" {
-  value = module.vpc
 }
